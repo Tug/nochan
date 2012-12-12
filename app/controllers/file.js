@@ -172,7 +172,8 @@ module.exports = function(app, model) {
     
 
     actions.download = function(req, res, error) {
-        var servername = req.params.fileid;
+        var servername = req.params.servername;
+        var filenameRequested = req.params.filename;
         
         if(typeof servername !== "string" || servername.length > 16) {
             error('Invalid file ID');
@@ -192,6 +193,10 @@ module.exports = function(app, model) {
                         }
                         if(file.status == 'Removed') {
                             error(new Error("File has been removed !"));
+                            return;
+                        }
+                        if(file.originalname != filenameRequested) {
+                            error(new Error("File Not found !"));
                             return;
                         }
                         nextstep(null, file);
@@ -236,7 +241,6 @@ module.exports = function(app, model) {
                 var filesize = gf.filesize;
                 debug("downloading "+filename+ " (size : "+filesize+")");
                 res.contentType(filename);
-                res.attachment(filename);
                 res.header('Content-Length', filesize);
                 gf.pipe(res);
                 ip.newDownload();

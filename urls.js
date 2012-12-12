@@ -12,7 +12,7 @@ module.exports = function(app) {
             ["/r/:roomid",                      "chat.index",           "get"  ],
             ["/r/:roomid/upload",               "file.upload",          "post" , [upm.upload, "session.load"],
                                                                                  [upm.errorHandler] ],
-            ["/r/:roomid/download/:fileid",     "file.download",        "get"  ],
+            ["/download/:servername/:filename", "file.download",        "get"  ],
         ]
         
       , ios : [
