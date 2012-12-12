@@ -73,6 +73,22 @@ module.exports = function(app, model) {
                         next(null, false);
                     }
                 },
+                function checkUsername(err, username) {
+                    var next = this;
+                    if(!username) {
+                        next(null, null);
+                        return;
+                    }
+                    Room
+                    .findById(roomid)
+                    .where('users', username)
+                    .limit(1)
+                    .exec(function(err, doc) {
+                        if(!err && doc) { // username exist, reset username
+                            next();
+                        } else next(null, username);
+                    });
+                },
                 function generateUsername(err, username) {
                     var next = this;
                     if(username) {

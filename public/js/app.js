@@ -121,7 +121,7 @@ $(document).ready(function() {
         notifyMessage: function(msg) {
             if(userAway) {
                 unreadMessages++;
-                $.titleAlert("("+unreadMessages+") "+originalTitle, {
+                $.titleAlert("(+"+unreadMessages+") "+originalTitle, {
                     requireBlur: false,
                     stopOnFocus: true,
                     interval: 1500
