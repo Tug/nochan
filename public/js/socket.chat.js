@@ -25,6 +25,7 @@ function runChatClient(app) {
             msg.date = new Date(msg.date);
         }
         app.showMessage(msg);
+        app.notifyMessage(msg);
     }
     
     function addMessages(messages) {

@@ -80,6 +80,11 @@ pre {
     word-wrap: break-word;
 }
 
+pre {
+    background: none;
+    border: 0;
+}
+
 #fileList {
     margin: 15px 0 0 0;
     padding: 0;
@@ -163,7 +168,11 @@ pre {
 }
 
 .image-small {
-    height: 200px;
+    max-height: 200px;
+}
+
+.image {
+    height: auto;
 }
 
 .embedded-video {

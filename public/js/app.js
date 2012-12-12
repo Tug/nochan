@@ -116,15 +116,42 @@ $(document).ready(function() {
             if(file.status == 'Removed') {
                 $('#c'+file.servername+'link').removeAttr('href');
             }
-            //if(file.bytesPerSec)
-            //    $('#'+file.servername+'speed').html(file.bytesPerSec);
+        },
+  
+        notifyMessage: function(msg) {
+            if(userAway) {
+                unreadMessages++;
+                $.titleAlert("("+unreadMessages+") "+originalTitle, {
+                    requireBlur: false,
+                    stopOnFocus: true,
+                    interval: 1500
+                });
+            }
         }
         
     }
+
+    var userAway = false;
+    var unreadMessages = 0;
+    var originalTitle = document.title;
+    
+    // when the user goes idle
+    $(document).bind("idle.idleTimer", function(){
+        userAway = true;
+    });
+
+    // when the user becomes active again
+    $(document).bind("active.idleTimer", function(){
+        userAway = false;
+        document.title = originalTitle;
+        unreadMessages = 0;
+    });
+  
+    $.idleTimer(5000);
     
     function getViewer(file) {
         if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(file.originalname)) {
-            return '<img class="image-small" id="img_'+file.servername+'" src="'+file.url+'" alt="'+file.originalname+'"></img>';
+            return '<img class="image image-small" id="img_'+file.servername+'" src="'+file.url+'" alt="'+file.originalname+'"></img>';
         } else if((/\.(mp3)$/i).test(file.originalname)) {
             return '<p id="'+file.servername+'_audio">Cannot load music player.</p>  ';
         } else if((/\.(flv|mp4)$/i).test(file.originalname)) {
