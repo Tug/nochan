@@ -28,13 +28,8 @@ $(document).ready(function() {
         messagesBox         : $('#messages'),
         usersBox            : $('#users'),
         submitMessageButton : $('#submitMessageButton'),
-        fileList            : $('#fileList'),
         browseButton        : $('#upFile'),
-        uploadButton        : $('#upSendBtn'),
-        hideModalButton     : $('#hideModalBtn'),
         renameButton        : $('#renameButton'),
-        uploadModal         : $('#upload-modal'),
-        clearFilesButton    : $('#clearFiles'),
         
         showWelcomeMessage: function() {
             app.addMessageToUl("----------------------------------------------");
@@ -145,6 +140,36 @@ $(document).ready(function() {
         }
         
     }
+
+    (function () {
+        var original = document.title;
+        var timeout;
+
+        window.flashTitle = function (newMsg, howManyTimes) {
+            function step() {
+                document.title = (document.title == original) ? newMsg : original;
+
+                if (--howManyTimes > 0) {
+                    timeout = setTimeout(step, 1000);
+                };
+            };
+
+            howManyTimes = parseInt(howManyTimes);
+
+            if (isNaN(howManyTimes)) {
+                howManyTimes = 5;
+            };
+
+            clearTimeout(timeout);
+
+            step();
+        };
+
+        window.cancelFlashTitle = function () {
+            clearTimeout(timeout);
+            document.title = original;
+        };
+    }());
 
     runChatClient(app);
     runFileClient(app);

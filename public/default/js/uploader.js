@@ -1,7 +1,5 @@
 
 function loadUploader(app) {
-  
-    var fileList = loadFileList(app.fileList);
     
     var uploader = new plupload.Uploader({
 	      runtimes : 'html5,flash,gears,silverlight,browserplus,html4',
@@ -24,39 +22,10 @@ function loadUploader(app) {
         $('#runtimeInfo').html("Current runtime: " + params.runtime);
     });
 
-    app.uploadButton.click(function(e) {
-        if (uploader.files.length > 0) {
+    uploader.bind('QueueChanged', function(up) {
+        if(up.files.length > 0 && uploader.state != 2) {
             uploader.start();
-        } else {
-            alert('Select a file first.');
         }
-    });
-
-    app.hideModalButton.click(function(e) {
-        app.uploadModal.modal('hide');
-    });
-
-    app.clearFilesButton.click(function(e) {
-        uploader.splice();
-    });
-    
-    uploader.bind('FilesAdded', function(up, files) {
-        files.forEach(fileList.add);
-        up.refresh(); // Reposition Flash/Silverlight
-    });
-
-    uploader.bind('FilesRemoved', function(up, files) {
-        files.forEach(fileList.remove);
-        up.refresh();
-    });
-    
-    uploader.bind('UploadFile', function(up, file) {
-        fileList.update(file);
-    });
-
-    uploader.bind('UploadProgress', function(up, file) {
-        file.bytesPerSec = up.total.bytesPerSec;
-        fileList.update(file);
     });
 
     uploader.bind('BeforeUpload', function(up, file) {
@@ -70,7 +39,6 @@ function loadUploader(app) {
             alert(res.response);
         } else {
             file.percent = 100;
-            fileList.update(file);
         }
         window.onbeforeunload = null;
     });
@@ -80,90 +48,8 @@ function loadUploader(app) {
         up.refresh(); // Reposition Flash/Silverlight
     });
 
-    app.uploadModal.on('shown', function() {
-        //uploader.refresh();
-    });
-    
-    app.uploadModal.on('hidden', function() {
-        //uploader.refresh();
-    });
-
     uploader.init();
 
     return uploader;
-}
-
-
-
-function loadFileList(fileList) {
-  
-    function getStatusString(status) {
-        switch(status) {
-            case plupload.QUEUED: return "Queued";
-            case plupload.UPLOADING: return "Uploading";
-            case plupload.FAILED: return "Failed";
-            case plupload.DONE: return "Done";
-        }
-        return "";
-    }
-    var lastStatus = -1000;
-    
-    return {
-        add : function(file) {
-            fileList.append('<li id="'+file.id+'">'
-                          +'<ul class="nav fileitem">'
-                            +'<li class="filenamefield">'
-                              +file.name
-                            +'</li>'
-                            +'<li class="fileprogressfield">'
-                              +'<div class="progress">'
-                                +'<div id="'+file.id+'progress" class="bar" style="width: 0%;"></div>'
-                              +'</div>'
-                            +'</li>'
-                            +'<li class="filestatusfield">'
-                              +'<span id="'+file.id+'status" class="label">Queued</span>'
-                            +'</li>'
-                          +'</ul>'
-                          +'</li>');
-        },
-
-        remove: function(file) {
-            $('#'+file.id).remove();
-        },
-
-        update : function(file) {
-            if(file.percent)
-                $('#'+file.id+'progress').width(file.percent+'%');
-            if(file.bytesPerSec)
-                $('#uploadSpeed').html(readableSize(file.bytesPerSec)+'/s');
-            if(file.status != lastStatus) {
-                lastStatus = file.status;
-                var statusStr = getStatusString(file.status);
-                $('#'+file.id+'status').html(statusStr);
-                $('#'+file.id+'status').removeClass('success');
-                $('#'+file.id+'status').removeClass('notice');
-                $('#'+file.id+'status').removeClass('important');
-                switch(file.status) {
-                    case plupload.QUEUED:
-                        break;
-                    case plupload.UPLOADING:
-                        $('#'+file.id+'status').addClass('notice');
-                        break;
-                    case plupload.FAILED:
-                        $('#'+file.id+'status').addClass('important');
-                        break;
-                    case plupload.DONE:
-                        $('#'+file.id+'status').addClass('success');
-                        break;
-                }
-            }
-        },
-        
-        clear : function(file) {
-            fileList.html('');
-        }
-      
-    };
-  
 }
 

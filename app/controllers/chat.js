@@ -56,16 +56,17 @@ module.exports = function(app, model) {
                 },
                 function userExists() {
                     var next = this;
-                    // TODO: verify when this case happens
+                    // TODO: verify when this case happens (users who did not emit disconnect?)
                     // if the session of the user contains an object for this room
                     // we reuse this object (the page was probably refreshed)
                     // and try to force disconnect the previous socket
+                    // does not work if the user connected to another server
                     if(hs.session.rooms[roomid]) {
                         var userinfo = hs.session.rooms[roomid];
                         var username = userinfo.username;
                         var sid = userinfo.sid;
-                        if(sid && sid != socket.id && app.io.sockets[sid]) { // disconnect previous socket
-                            app.io.sockets[sid].disconnect();
+                        if(sid && sid != socket.id && app.io.sockets.sockets[sid]) { // disconnect previous socket
+                            app.io.sockets.sockets[sid].disconnect();
                         }
                         next(null, username);
                     } else {

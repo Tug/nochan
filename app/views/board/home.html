@@ -5,7 +5,7 @@
     <title>NoChan</title>
     <meta name="description" content="Cloud chat application">
     <meta name="author" content="Tug">
-
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
 
     <!--[if lt IE 9]>
@@ -21,7 +21,7 @@
       </div> <!-- /page-header -->
       <div class="home-list-rooms">
         <div>
-          <h2>Public rooms</h2>
+          <h3>Public rooms</h2>
         </div>
 				<div>
           <br/>
@@ -34,27 +34,24 @@
       </div>
       <div class="home-create-room">
         <div>
-          <h2>Create chat room</h2>
+          <h3>Create chat room</h2>
         </div>
-        <div>
-          <form id='CreateChatForm' name='formAction' method='post' action='/rooms/create'>
-            <fieldset>
-              <div class="form-item">
-                <label for="xlInput">Name</label>
-                <div class="input">
-                  <input class="xlarge" id="title" name="title" size="30" type="text">
-                </div>
+        <div id="createChatRoom" class="bluer">
+          <form class="form-horizontal" name='formAction' method='post' action='/rooms/create'>
+            <div class="control-group">
+              <label class="control-label" for="inputName">Name your Room</label>
+              <div class="controls">
+                <input type="text" id="inputName" placeholder="Room name">
               </div>
-              <div class="form-item">
-                <label for="xlInput">Public</label>
-                <div class="input">
-                  <input type="checkbox" class="input" name="ispublic" value="1" />
-                </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <label class="checkbox">
+                  <input type="checkbox" name="ispublic">Make it public
+                </label>
+                <button type="submit" class="btn">Create</button>
               </div>
-              <div class="home-actions">
-                <input type="submit" class="btn primary" value="Create">
-              </div>
-            </fieldset>
+            </div>
           </form>
         </div>
 			</div> <!-- /row -->

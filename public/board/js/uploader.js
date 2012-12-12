@@ -5,13 +5,13 @@ function loadUploader(app) {
     var dragndropEnabled = false;
 
     var uploader = new plupload.Uploader({
-	      runtimes : 'gears,flash,silverlight,browserplus,html4,html5', // html5 + multipart is not supported in Webkit
+	      runtimes : 'gears,browserplus,html4,flash,silverlight,html5', // html5 + multipart is not supported in Webkit
 	      max_file_size : app.MAX_FILE_SIZE,
 	      browse_button : app.browseButton.attr('id'),
-	      container: app.fileContainer.attr('id'),
         drop_element: app.fileList.attr('id'),
 	      unique_names : true,
 	      multipart: true,
+        multi_selection: false,
 	      url : app.UP_URL,
 	      flash_swf_url : app.PLUPLOAD_ROOT+'plupload.flash.swf',
 	      silverlight_xap_url : app.PLUPLOAD_ROOT+'plupload.silverlight.xap',
@@ -25,37 +25,18 @@ function loadUploader(app) {
     uploader.bind('Init', function(up, params) {
         $('#runtimeInfo').html("Current runtime: " + params.runtime);
         dragndropEnabled = (params.runtime in ['gears','browserplus','html5']);
-        reset();
-    });
-
-    function reset() {
-        if(uploader.files.length > 0) uploader.splice();
-        if(dragndropEnabled) {
-            app.fileList.html('<li class="dropText">Drag files here!</li>');
-        } else {
-            app.fileList.html('');
-        }
-        cleared = true;
-    }
-
-    app.clearFilesButton.click(reset);
-
-    app.uploadButton.click(function(e) {
-        if (uploader.files.length > 0) {
-            uploader.start();
-        } else {
-            alert('Select a file first.');
-        }
     });
     
-    var cleared = true;
     uploader.bind('FilesAdded', function(up, files) {
-        if(cleared) {
-            app.fileList.html('');
-            cleared = false;
-        }
+        fileList.clear();
         files.forEach(fileList.add);
         up.refresh(); // Reposition Flash/Silverlight
+    });
+
+    uploader.bind('QueueChanged', function(up) {
+        if(up.files.length > 0 && uploader.state != 2) {
+            uploader.start();
+        }
     });
 
     uploader.bind('FilesRemoved', function(up, files) {
@@ -120,20 +101,15 @@ function loadFileList(fileList) {
     
     return {
         add : function(file) {
-            fileList.append('<li id="'+file.id+'">'
+            fileList.html('<li id="'+file.id+'">'
                           +'<ul class="fileitem">'
                             +'<li class="filenamefield">'
-                              +file.name
-                            +'</li>'
-                            +'<li class="fileprogressfield">'
-                              +'<div class="progress">'
-                                +'<div id="'+file.id+'progress" class="bar" style="width: 0%;"></div>'
-                              +'</div>'
+                              +'<span class="label label-info">'+file.name+'</span>'
                             +'</li>'
                             +'<li class="filestatusfield">'
                               +'<span id="'+file.id+'status" class="label">Queued</span>'
                             +'</li>'
-                          +'</ul>'
+                           +'</ul>'
                           +'</li>');
         },
 
@@ -142,34 +118,32 @@ function loadFileList(fileList) {
         },
 
         update : function(file) {
-            if(file.percent)
-                $('#'+file.id+'progress').width(file.percent+'%');
             if(file.bytesPerSec)
-                $('#uploadSpeed').html(readableSize(file.bytesPerSec)+'/s');
+                $('#uploadSpeedValue').html(readableSize(file.bytesPerSec)+'/s');
             if(file.status != lastStatus) {
                 lastStatus = file.status;
                 var statusStr = getStatusString(file.status);
                 $('#'+file.id+'status').html(statusStr);
-                $('#'+file.id+'status').removeClass('success');
-                $('#'+file.id+'status').removeClass('notice');
-                $('#'+file.id+'status').removeClass('important');
+                $('#'+file.id+'status').removeClass('label-success');
+                $('#'+file.id+'status').removeClass('label-info');
+                $('#'+file.id+'status').removeClass('label-important');
                 switch(file.status) {
                     case plupload.QUEUED:
                         break;
                     case plupload.UPLOADING:
-                        $('#'+file.id+'status').addClass('notice');
+                        $('#'+file.id+'status').addClass('label-warning');
                         break;
                     case plupload.FAILED:
-                        $('#'+file.id+'status').addClass('important');
+                        $('#'+file.id+'status').addClass('label-important');
                         break;
                     case plupload.DONE:
-                        $('#'+file.id+'status').addClass('success');
+                        $('#'+file.id+'status').addClass('label-success');
                         break;
                 }
             }
         },
         
-        clear : function(file) {
+        clear : function() {
             fileList.html('');
         }
       

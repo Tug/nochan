@@ -7,7 +7,16 @@ html, body {
 }
 
 pre {
+    border: 0;
+    border-radius: 0;
+    background-color: initial;
+    margin: 0;
+    padding: 5px;
     white-space: pre-wrap;
+}
+
+#createChatRoom {
+    padding: 15px;
 }
 
 .page-header {
@@ -15,7 +24,7 @@ pre {
 }
 
 .page-content {
-    margin: 0 0 80px 0;
+    margin: 0 0 80px 40px;
 }
 
 .home-create-room {
@@ -72,16 +81,10 @@ pre {
 }
 
 #fileList {
-    position: absolute;
-    width: 100%;
-    height: 120px;
-    overflow-y: scroll;
-    margin: 0;
+    margin: 15px 0 0 0;
     padding: 0;
     list-style: none;
-    border: 1px solid;
-    -webkit-appearance: textarea;
-    background-color: white;
+    width: 100%;
 }
 
 .dropText {
@@ -90,34 +93,17 @@ pre {
     line-height: 120px;
 }
 
-.bottom-bar {
-    height: 200px;
-    padding: 10px 20px 10px 20px;
-}
-
-.hblock {
-    position:absolute;
-}
-
 #chatblock {
     width: 550px;
-    margin: 0 10px 0 40px;
-}
-
-#submitMessageButton {
-    display: inline;
-    float: left;
-    width: 60px;
-    height: 25px;
-    margin: 55px 0 0 10px;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .write-area {
     resize: none;
-    float: left;
-    display: inline;
-    height: 80px;
-    width: 80%;
+    height: 100px;
+    width: 98%;
 }
 
 #fileblock {
@@ -131,86 +117,28 @@ pre {
 }
 
 .fileitem {
-    margin: 9px 0 0 0;
+    margin: 0 0 9px 0;
     padding: 0;
     font-size: small;
     display: block;
     float: left;
     left: 0;
-    text-decoration: none;
+    list-style: none;
 }
 
-.fileitem li {
-    display: block;
+.fileitem > li {
     float: left;
-    padding-left: 10px;
+    padding-left: 5px;
 }
 
 .filenamefield {
-    width: 290px;
-    padding-right: 5px;
+    max-width: 360px;
     overflow-x: hidden;
 }
 
-.fileprogressfield {
-    width: 80px;
-    top: 0px
-}
-
-.progress {
-    display: block;
-    overflow: hidden;
-    height: 15px;
-    margin-top: 1px;
-    background-color: #F7F7F7;
-    background-image: -moz-linear-gradient(top, whiteSmoke, #F9F9F9);
-    background-image: -ms-linear-gradient(top, whiteSmoke, #F9F9F9);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(whiteSmoke), to(#F9F9F9));
-    background-image: -webkit-linear-gradient(top, whiteSmoke, #F9F9F9);
-    background-image: -o-linear-gradient(top, whiteSmoke, #F9F9F9);
-    background-image: linear-gradient(top, whiteSmoke, #F9F9F9);
-    background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#f9f9f9', GradientType=0);
-    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-}
-
-.progress .bar {
-    display: block;
-    height: 15px;
-    color: white;
-    font-size: 12px;
-    text-align: center;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    background-color: #0E90D2;
-    background-image: -moz-linear-gradient(top, #149BDF, #0480BE);
-    background-image: -ms-linear-gradient(top, #149BDF, #0480BE);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#149BDF), to(#0480BE));
-    background-image: -webkit-linear-gradient(top, #149BDF, #0480BE);
-    background-image: -o-linear-gradient(top, #149BDF, #0480BE);
-    background-image: linear-gradient(top, #149BDF, #0480BE);
-    background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#149bdf', endColorstr='#0480be', GradientType=0);
-    -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-transition: width 0.6s ease;
-    -moz-transition: width 0.6s ease;
-    -ms-transition: width 0.6s ease;
-    -o-transition: width 0.6s ease;
-    transition: width 0.6s ease;
-}
-
 .filestatusfield {
-    width: 70px;
-    text-align: center;
+    /*width: 30%;
+    text-align: center;*/
 }
 
 
@@ -222,11 +150,16 @@ pre {
 
 #runtimeInfo {
     margin-right: 40px;
+    font-size: 80%;
     display: inline;
 }
 
 #uploadSpeed {
     display: inline;
+    margin-left: 5px;
+    margin-top: 0;
+    padding: 0;
+    font-size: small;
 }
 
 .image-small {
@@ -238,13 +171,65 @@ pre {
     height: 363px;
 }
 
-#enterToSendBox {
-    margin: 10px 10px 0 0;
-    float: right;
-    
+.row-fluid [class*="span"] {
+    display: block;
+    float: left;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-#CreateChatForm fieldset {
-    border: 0;
+.row-fluid::before, .row-fluid::after {
+    display: table;
+    line-height: 0;
+    content: "";
+}
+
+.row-fluid::after {
+    clear: both;
+}
+
+.row-fluid .span85 {
+    width: 83%;
+}
+
+.row-fluid .span75 {
+    width: 73%;
+}
+
+.row-fluid .span66 {
+    width: 65%;
+}
+
+.row-fluid .span50 {
+    width: 49%;
+}
+
+.row-fluid .span33 {
+    width: 32%;
+}
+
+.row-fluid .span25 {
+    width: 24%;
+}
+
+.row-fluid .span20 {
+    width: 19%;
+}
+
+.row-fluid .span15 {
+    width: 14%;
+}
+
+.bluer {
     background-color: #D0FFFF;
 }
+
+#enterToSendBox {
+    float: right;
+    margin-top: 25px;
+}
+

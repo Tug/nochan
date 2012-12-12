@@ -37,10 +37,9 @@ $(document).ready(function() {
         submitMessageButton : $('#submitMessageButton'),
         fileList            : $('#fileList'),
         browseButton        : $('#upFile'),
-        uploadButton        : $('#upSendBtn'),
+        uploadedFileBox     : $('#uploadedFile'),
         renameButton        : $('#renameButton'),
         fileContainer       : $('#fileContainer'),
-        clearFilesButton    : $('#clearFiles'),
         enterToSendCheckBox : $('#enterToSend'),
         
         showWelcomeMessage: function() {},

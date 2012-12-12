@@ -12,11 +12,13 @@ module.exports = function(app, model) {
     var MAX_DOWN        = app.config.limits.maxDownMB * 1024 * 1024;
     var RELOAD_TIME     = app.config.limits.reloadTimeMin * 60 * 1000;
     var MIN_MSG_INTERVAL= app.config.limits.minMessageInterval;
+    var MIN_UP_INTERVAL = app.config.limits.minUploadInterval;
     
     var IP = new mongoose.Schema({
         ip          : { type: String, index: true }
       , lastsaved   : { type: Date, default: Date.now }
-      , lastMessage : { type: Date, default: function() { return 0; } }
+      , lastMessage : { type: Date, default: function() { return new Date(0); } }
+      , lastUpload  : { type: Date, default: function() { return new Date(0); } }
       , totalUp     : { type: Number, default: 0 }
       , totalDown   : { type: Number, default: 0 }
       , simulUp     : { type: Number, default: 0 }
@@ -61,6 +63,7 @@ module.exports = function(app, model) {
     
     IP.methods.addUploaded = function(value, next) {
         this.uploaded += value;
+        this.lastUpload = new Date();
         return this.save(next);
     };
 
@@ -97,7 +100,8 @@ module.exports = function(app, model) {
 
     IP.methods.canUpload = function(bytes) {
         if(this.hasServedTime()) this.reset();
-        return (this.uploaded + bytes <= MAX_UP) && this.totalUp < MAX_TOTAL_UP;
+        return (Date.now() - this.lastUpload.getTime() > MIN_UP_INTERVAL)
+           && (this.uploaded + bytes <= MAX_UP) && this.totalUp < MAX_TOTAL_UP;
     };
 
     IP.methods.canDownload = function(bytes) {
