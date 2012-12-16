@@ -1,7 +1,7 @@
 
-# Express-chat
+# NoChan
 
-Express chat is a node.js multi-server chat application with file exchange capabilities.
+NoChan is a node.js multi-server BBS application.
 Messages are sent with Socket-IO and saved in MongoDB.
 Users can stream files in MongoDB/GridFS directly!
 
@@ -11,8 +11,8 @@ Users can stream files in MongoDB/GridFS directly!
 * MongoDB and Redis installed and running.
 
 ## Installation
-* git clone git://github.com/Tug/express-chat.git
-* cd express-chat
+* git clone git://github.com/Tug/nochan.git
+* cd nochan
 * npm install .
 
 ## Configuring
@@ -26,8 +26,7 @@ or
 
 
 ## TODO
-* fix bugs with plupload :  html5 runtime errors with multiple files, http error content not displayed, max upload file size not detected with some runtimes...
 * Load test
 * Script deployment
-* improve UI : use backbone and mix client and server views, announce new message, add connecting...
-* Set a minimum delay per client for uploads and messages
+* improve client side : use backbone and mix client and server views, announce new message, add connecting...
+
