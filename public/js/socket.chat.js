@@ -55,13 +55,15 @@ function runChatClient(app) {
     app.submitMessageButton.click(sendMessageHandler);
     app.renameButton.click(renameHandler);
     
-    app.enterToSendCheckBox.click(function() {
-        if($(this).is(':checked')) {
+    function setEnterToSendStatus() {
+        if(app.enterToSendCheckBox.is(':checked')) {
             bindEnter(app.messageBox, sendMessageHandler);
         } else {
             unbindEnter(app.messageBox, sendMessageHandler);
         }
-    });
+    }
+    setEnterToSendStatus();
+    app.enterToSendCheckBox.click(setEnterToSendStatus);
     
     function sendMessageHandler() {
         var msg = app.messageBox.val();

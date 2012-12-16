@@ -100,6 +100,7 @@ pre {
 
 #chatblock {
     width: 550px;
+    height: 320px;
     padding: 15px;
     margin-left: auto;
     margin-right: auto;
@@ -240,5 +241,24 @@ pre {
 #enterToSendBox {
     float: right;
     margin-top: 25px;
+}
+
+
+.qq-upload-list {
+    text-align: left;
+    margin: 0 0 0 2px;
+    list-style: none;
+}
+
+li.alert-success {
+    background-color: #DFF0D8;
+}
+
+li.alert-error {
+    background-color: #F2DEDE;
+}
+
+.alert-error .qq-upload-failed-text {
+    display: inline;
 }
 

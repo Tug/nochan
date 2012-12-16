@@ -27,7 +27,7 @@ $(document).ready(function() {
         UP_URL          : '/r/'+roomid+'/upload',
         DOWN_URL        : '/download/',
         PLUPLOAD_ROOT   : '/static/lib/plupload/',
-        MAX_FILE_SIZE   : '1000mb',
+        MAX_FILE_SIZE   : 1000 * 1024 * 1024, // 1000 MB
         msgCount        : 0,
 
         username        : 'Anonymous',
@@ -63,7 +63,8 @@ $(document).ready(function() {
             }
             msgStr += '</div><div class="message">';
             var file = msg.attachment;
-            if(file && file.status != 'Removed') {
+            if(file) {
+                if(file.status == 'Removed') return;
                 file.url = app.DOWN_URL+file.servername+'/'+encodeURIComponent(file.originalname);
                 msgStr += '<p><a id="c'+file.servername+'link" href="'+file.url+'" target="_blank">'
                         +file.originalname

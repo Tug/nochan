@@ -64,6 +64,8 @@ module.exports = function(app, model) {
                 });
             },
             function createFile(err, ip) {
+                if(err) throw err;
+                
                 var nextstep = this;
                 var file = new FileModel({
                     originalname  : filename
@@ -80,6 +82,8 @@ module.exports = function(app, model) {
                 });
             },
             function createGridStore(err, ip, file) {
+                if(err) throw err;
+                
                 var nextstep = this;
                 var servername = file.servername;
                 var meta = {filesize: filesize, originalname: file.originalname};
@@ -123,7 +127,6 @@ module.exports = function(app, model) {
                 
                 req.form.on('close', function() {
                     gs.close(function(err, result) {
-                        if(!res.headerSent) res.send('ok');
                         file.status = "Available";
                         file.save();
                         transferOver();
@@ -138,7 +141,6 @@ module.exports = function(app, model) {
                 });
 
                 req.form.on('aborted', function() {
-                    console.log('aborted');
                     gs.unlink(function(err) {
                         file.status = "Removed";
                         file.save();
@@ -147,12 +149,16 @@ module.exports = function(app, model) {
                 });
             },
             function start(err, file) {
+                if(err) throw err;
+                
                 var nextstep = this;
                 req.form.read();
                 debug("uploading "+file.originalname+ " (size : "+file.size+")");
                 nextstep(null, file);
             },
             function saveMessageFile(err, file) {
+                if(err) throw err;
+                
                 var nextstep = this;
                 var fileurl = app.routes.url("file.download", {roomid: roomid, fileid: file.servername });
                 var message = MessageModel.createEmptyFileMessage(roomid, file);
@@ -165,6 +171,10 @@ module.exports = function(app, model) {
                     msg.attachment = file.publicFields();
                     app.io.of(chatIOUrl).in(roomid).json.emit("new message", msg);
                 });
+            },
+            function handleError(err) {
+                console.log(err.stack);
+                if(err) error(err);
             }
         );
         
