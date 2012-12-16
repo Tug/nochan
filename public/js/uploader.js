@@ -20,6 +20,7 @@ function loadUploader(app) {
         },
         template: '<div class="qq-uploader span12">' +
                     '<div class="qq-upload-button btn btn-success" style="width: auto;">{uploadButtonText}</div>' +
+                    '<div class="uplaod-info">1GB max every 6 hours. Must wait 30s between each file.</div>' +
                     '<ul class="qq-upload-list" style="margin-top: 10px; text-align: center;"></ul>' +
                   '</div>',
         classes: {

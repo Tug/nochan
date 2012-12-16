@@ -152,7 +152,7 @@ $(document).ready(function() {
     
     function getViewer(file) {
         if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(file.originalname)) {
-            return '<img class="image image-small" id="img_'+file.servername+'" src="'+file.url+'" alt="'+file.originalname+'"></img>';
+            return '<img class="image-small" id="img_'+file.servername+'" src="'+file.url+'" alt="'+file.originalname+'"></img>';
         } else if((/\.(mp3)$/i).test(file.originalname)) {
             return '<p id="'+file.servername+'_audio">Cannot load music player.</p>  ';
         } else if((/\.(flv|mp4)$/i).test(file.originalname)) {

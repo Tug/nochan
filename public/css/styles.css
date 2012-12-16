@@ -70,7 +70,7 @@ pre {
 }
 
 .messageHeader {
-    padding: 0 30px 0 0;
+    padding: 0 80px 0 0;
 }
 
 .message {
@@ -154,12 +154,6 @@ pre {
     font-size: small;
 }
 
-#runtimeInfo {
-    margin-right: 40px;
-    font-size: 80%;
-    display: inline;
-}
-
 #uploadSpeed {
     display: inline;
     margin-left: 5px;
@@ -169,11 +163,7 @@ pre {
 }
 
 .image-small {
-    max-height: 200px;
-}
-
-.image {
-    height: auto;
+    height: 200px;
 }
 
 .embedded-video {
@@ -260,5 +250,11 @@ li.alert-error {
 
 .alert-error .qq-upload-failed-text {
     display: inline;
+}
+
+.uplaod-info {
+    font-size: 80%;
+    display: inline;
+    margin: 0 0 0 5px;
 }
 
