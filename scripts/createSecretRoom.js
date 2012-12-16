@@ -14,7 +14,7 @@ var configFile  = args[0]
 
 var model = {}
   , app = {};
-autoload(app, model, config, function() {
+autoload(app, model, config, function(err) {
 
     if(err) console.log(err);
     
