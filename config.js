@@ -9,7 +9,7 @@ var config = {
   , database  : {
         mongo : {
             servers : [
-                'localhost:27017/db'
+                'localhost:27017/nochan'
             ]
           , options : {
                 server : {
@@ -42,10 +42,10 @@ var config = {
         , controllers : path.join(application_root, 'app', 'controllers')
         , crons       : path.join(application_root, 'app', 'crons')
         , favicon     : path.join(application_root, 'public', 'favicon.ico')
-		, statics	  : {
-		    '/static'           : path.join(application_root, 'public')
-		  , '/static/server_lib': path.join(application_root, 'app', 'libs')
-		}
+        , statics     : {
+            '/static' : path.join(application_root, 'public')
+          , '/static/server_lib': path.join(application_root, 'app', 'libs')
+        }
     }
   , session : {
         secret  : 'rgkervdgmigeccxvfezf'
