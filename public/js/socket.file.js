@@ -17,11 +17,11 @@ function runFileClient(app) {
     });
 
     app.watchFile = function(file) {
-    	client.emit('file watch', file.id);
+    	client.emit('file watch', file.servername);
     };
 
     app.unwatchFile = function(file) {
-    	client.emit('file unwatch', file.id);
+    	client.emit('file unwatch', file.servername);
     };
     
 }

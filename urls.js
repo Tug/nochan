@@ -8,9 +8,10 @@ module.exports = function(app) {
     return {
         urls : [
             ["/",                               "index.index",          "get"  ],
-            ["/rooms/create",                   "index.createRoom",     "post" , express.bodyParser()],
-            ["/r/:roomid",                      "chat.index",           "get"  ],
-            ["/r/:roomid/upload",               "file.upload",          "post" , [upm.upload, "session.load"],
+            ["/:catid",                         "category.index",       "get"  ],
+            ["/:catid",                         "category.createRoom",  "post" , express.bodyParser()],
+            ["/:catid/:roomid",                 "chat.index",           "get"  ],
+            ["/:catid/:roomid/upload",          "file.upload",          "post" , [upm.upload, "session.load"],
                                                                                  [upm.errorHandler] ],
             ["/download/:servername/:filename", "file.download",        "get"  ],
         ]

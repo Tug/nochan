@@ -17,11 +17,12 @@ module.exports = function(app, model) {
     Message.pre('save', function(next) {
         var RoomModel = model.mongoose.model('Room');
         var self = this;
+        
         RoomModel.findByIdAndUpdate(self.roomid,
                                     {$inc: {messageCount: 1}},
                                     {select: 'messageCount'},
                                     function(err, doc) {
-            if(err || !doc) next(err || new Error('doc is null'));
+            if(err || !doc) next(err || new Error('Error while update message counter: room is null'));
             else {
                 self.num = doc.messageCount;
                 next();
@@ -60,6 +61,29 @@ module.exports = function(app, model) {
         .sort('num')
         .populate('attachment')
         .exec(callback);
+    };
+
+    Message.statics.firstOnes = function(roomid, num, callback) {
+        MessageModel
+        .where('roomid', roomid)
+        .limit(num)
+        .sort('num')
+        .populate('attachment')
+        .exec(callback);
+    };
+    
+    Message.statics.lastOnes = function(roomid, num, callback) {
+        MessageModel
+        .where('roomid', roomid)
+        .limit(num)
+        .sort('-num')
+        .populate('attachment')
+        .exec(function(err, docs) {
+            if(err || !docs) callback(err, null);
+            else {
+                callback(null, docs.reverse());
+            }
+        });
     };
 
     Message.methods.publicFields = function() {

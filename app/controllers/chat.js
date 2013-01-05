@@ -4,6 +4,7 @@ module.exports = function(app, model) {
     var Room = model.mongoose.model('Room')
       , Message = model.mongoose.model('Message')
       , Counter = model.mongoose.model('Counter')
+      , Category = model.mongoose.model('Category')
       , IP = model.mongoose.model('IP')
       , Step = app.libs.Step;
     
@@ -16,15 +17,28 @@ module.exports = function(app, model) {
     
     var actions = {};
 
-    actions.index = function(req, res, next) {
+    actions.index = function(req, res, error) {
         var roomid = req.params.roomid;
         Room.findOne({_id: roomid}, function(err, room) {
             if(err || !room) {
                 res.redirect(app.routes.url("index.index"));
                 return;
             }
-            var roomName = room.title || "Room "+room.id;
-            res.render('chat.html', { data: { title : roomName } });
+            var title = room.title || "Room "+room.id;
+            var map = app.Plates.Map();
+            map.className('title').to('title');
+            Category.list(function(err, categories) {
+                map.where('href').has(/caturl/).insert('shortname');
+                map.className('category').to('category');
+                map.className('shortname').to('shortname');
+                res.render('chat.html', {
+                    data: {
+                        title     : title
+                      , category  : (categories || [])
+                    }
+                  , map: map 
+                });
+            });
         });
     };
 
@@ -178,7 +192,7 @@ module.exports = function(app, model) {
                         userip: socket.handshake.address.address
                     });
                     message.save(function(err) {
-                        if(err) console.log(err);
+                        if(err) console.log(err.stack);
                         app.io.of(chatIOUrl).in(sroomid).emit('new message', message.publicFields());
                     });
                 }

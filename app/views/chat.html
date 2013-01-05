@@ -16,7 +16,7 @@
     <script src="/static/lib/jquery-1.7.1.min.js" type="text/javascript"></script>
     <script src="/static/lib/jquery.titlealert.min.js" type="text/javascript"></script>
     <script src="/static/lib/jquery.idle-timer.js" type="text/javascript"></script>
-    <script src="/static/lib/phpjs.js" type="text/javascript"></script>
+    <script src="/static/server_lib/common.js" type="text/javascript"></script>
     <script src="/static/lib/jquery.fineuploader-3.1.min.js" type="text/javascript"></script>
     <script src="/static/js/uploader.js" type="text/javascript"></script>
     <script src="/socket.io/socket.io.js" type="text/javascript"></script>
@@ -32,10 +32,18 @@
 
 <body>
   <div class="page-header">
-      <h1 id="title">Board</h1>
+      <div class="categories-header">
+         [<ul class="category-list">
+            <li class="category">
+              <a href="/caturl" class="shortname"></a> /&nbsp; 
+            </li>
+            <a href="/">Home</a>
+          </ul>]
+      </div>
+      <h1 class="title">Board</h1>
   </div>
   <div class="page-content">
-      <ul id="messagesBox"></ul>
+      <ul id="messagesBox" class="messages"></ul>
   </div>
   <div class="bottom-bar">
       <div class="bluer" id="chatblock">

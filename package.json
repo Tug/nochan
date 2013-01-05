@@ -6,9 +6,10 @@
     , "keywords"    : ["express-chat","chat","cloud","mongodb","redis","socket-io"]
     , "dependencies": {
         "express-autoload"  : "0.1.0"
-      , "upload-middleware" : "0.2.1"
+      , "upload-middleware" : "0.2.2"
       , "growing-mongofile" : "0.1.8"
       , "debug"             : "0.7.0"
+      , "step"              : "0.0.5"
     }
     , "main"        : "./app.js"
     , "engines"     : { "node": ">= 0.6.2" }

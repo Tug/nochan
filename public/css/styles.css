@@ -60,12 +60,20 @@ pre {
     -webkit-column-gap: 10px;
 }
 
-#messagesBox {
+.categories {
+    padding: 0 30px 0 30px;
+    -moz-column-width: 180px;
+    -webkit-column-width: 180px;
+    -moz-column-gap: 10px;
+    -webkit-column-gap: 10px;
+}
+
+.messages {
     list-style: none;
     margin: 0;
 }
 
-#messagesBox li {
+.messages li {
     display: table;
 }
 
@@ -256,5 +264,35 @@ li.alert-error {
     font-size: 80%;
     display: inline;
     margin: 0 0 0 5px;
+}
+
+.topics {
+    list-style: none;
+    margin: 0 0 60px 0;
+}
+
+.topic {
+    margin: 10px 0 80px 0;
+    min-height: 500px;
+}
+
+.topic-title {
+    display: block;
+    font-size: 140%;
+    margin-bottom: 10px;
+}
+
+.categories-header {
+    margin-bottom: 40px;
+}
+
+.category-list {
+    margin: 0;
+    list-style: none;
+    display: inline;
+}
+
+.category-list > li {
+    display: inline-block;
 }
 

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>NoChan</title>
+  <meta name="description" content="Cloud chat application">
+  <meta name="author" content="Tug">
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+
+  <style type="text/css">
+  .messages > li:first-child
+  {
+      float: left;
+      margin-right: 50px;
+  }
+
+  .messages > li:first-child > .messageHeader
+  {
+      font-size: 120%;
+  }
+
+  .messages > li:first-child > .message
+  {
+      background-color: transparent;
+  }
+  </style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="page-header">
+    <div class="categories-header">
+     [<ul class="category-list">
+        <li class="category">
+          <a href="/caturl" class="shortname"></a> /&nbsp; 
+        </li>
+        <a href="/">Home</a>
+      </ul>]
+    </div>
+    <h1 class="header-title">NoChan</h1>
+  </div> <!-- /page-header -->
+  <div class="page-content">
+    <div class="content">
+      <ul class="topics">
+        <li class="topic">
+          <a href="/catid/roomid" class="topic-title">Room Title</a>
+          <ul class="messages">
+            <li class="msgsample">
+					  <div class="messageHeader">
+					    <span class="nickname"></span> - <span class="msgdate"></span> - No.<span class="message-num"></span>
+					  </div>
+					  <div class="message">
+					  </div>
+					</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="home-container">
+      <div>
+        <h3>Create a topic</h2>
+      </div>
+      <div id="createChatRoom" class="bluer">
+        <form class="form-horizontal" name='formAction' method='post' action='/catid'>
+          <div class="control-group">
+            <label class="control-label" for="inputName">Name your topic</label>
+            <div class="controls">
+              <input type="text" id="inputName" name="title" placeholder="Room name">
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn">Create</button>
+            </div>
+          </div>
+        </form>
+      </div> <!-- /createChatRoom -->
+    </div> <!-- /content -->
+  </div> <!-- /container -->
+</body>
+</html>

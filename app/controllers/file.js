@@ -31,8 +31,8 @@ module.exports = function(app, model) {
             return;
         }
 
-        if(typeof filename !== "string" || filename.length > 255) {
-            error('Invalid Filename');
+        if(typeof filename !== "string" || filename.length > 255 || /\\|\/|:|<|>/.test(filename)) {
+            error(new Error('Invalid Filename'));
             return;
         }
         
@@ -108,7 +108,7 @@ module.exports = function(app, model) {
                 function transferOver(err) {
                     ip.uploadFinished();
                     fileStatus.status = file.status;
-                    app.io.of(fileIOUrl).in(fileStatus.id).emit('status', fileStatus);
+                    app.io.of(fileIOUrl).in(servername).emit('status', fileStatus);
                 }
 
                 var totalRead = 0;
@@ -118,7 +118,7 @@ module.exports = function(app, model) {
                         var newProgress = Math.floor(100*totalRead/file.size);
                         if(newProgress > fileStatus.percent) {
                             fileStatus.percent = newProgress;
-                            app.io.of(fileIOUrl).in(fileStatus.id).emit('status', fileStatus);
+                            app.io.of(fileIOUrl).in(servername).emit('status', fileStatus);
                         }
                         ip.addUploaded(data.length);
                         callback();
@@ -160,7 +160,6 @@ module.exports = function(app, model) {
                 if(err) throw err;
                 
                 var nextstep = this;
-                var fileurl = app.routes.url("file.download", {roomid: roomid, fileid: file.servername });
                 var message = MessageModel.createEmptyFileMessage(roomid, file);
                 message.save(function(err) {
                     if(err) {
@@ -286,23 +285,29 @@ module.exports = function(app, model) {
             callback();
         });
 
-        socket.on('file watch', function(fileid) {
+        socket.on('file watch', function(servername) {
+            if(typeof servername != "string" || servername.length > 64) {
+                return;
+            }
             FileModel
-            .findOne({'servername': fileid})
+            .findOne({'servername': servername})
             .exec(function(err, file) {
                 if(err || !file) {
                     return;
                 }
                 if(file.status == 'Uploading') {
-                    socket.join(fileid);
+                    socket.join(servername);
                 } else {
                     socket.emit("status", file.publicFields());
                 }
             });
         });
 
-        socket.on('file unwatch', function(fileid) {
-            socket.leave(fileid);
+        socket.on('file unwatch', function(servername) {
+            if(typeof servername != "string" || servername.length > 64) {
+                return;
+            }
+            socket.leave(servername);
         });
 
     };
