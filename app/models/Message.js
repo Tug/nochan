@@ -17,9 +17,8 @@ module.exports = function(app, model) {
     Message.pre('save', function(next) {
         var RoomModel = model.mongoose.model('Room');
         var self = this;
-        
         RoomModel.findByIdAndUpdate(self.roomid,
-                                    {$inc: {messageCount: 1}},
+                                    {$inc: {messageCount: 1}, $set: {lastMessageDate: new Date()}},
                                     {select: 'messageCount'},
                                     function(err, doc) {
             if(err || !doc) next(err || new Error('Error while update message counter: room is null'));

@@ -11,8 +11,10 @@ module.exports = function(app, model) {
         , creationDate    : { type: Date, default: Date.now }
         , deathDate       : Date
         , messageCount    : {type: Number, default: 0 }
+        , lastMessageDate : Date
         , ispublic        : {type: Boolean, default: false, index: true}
         , users           : [{ type: String }]
+        , category        : { type: String, ref: 'Category', index: true }
     },
     {safe: undefined});
 

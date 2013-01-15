@@ -90,6 +90,9 @@ var config = {
       , uploadSpeedKBs    : 600
       , downloadSpeedKBs  : 500
       , reloadTimeMin     : 6 * 60
+      , roomsPerCategory  : 100
+      , roomsPerPage      : 15
+      , maxLifeEmptyRoom  : 10 * 60 * 1000  // 10 min
     }
 };
 

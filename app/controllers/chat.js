@@ -6,7 +6,8 @@ module.exports = function(app, model) {
       , Counter = model.mongoose.model('Counter')
       , Category = model.mongoose.model('Category')
       , IP = model.mongoose.model('IP')
-      , Step = app.libs.Step;
+      , Step = app.libs.Step
+      , common = app.libs.common;
     
     var anonCounter = new Counter({_id: "Anon"});
 
@@ -33,7 +34,7 @@ module.exports = function(app, model) {
                 map.className('shortname').to('shortname');
                 res.render('chat.html', {
                     data: {
-                        title     : title
+                        title     : common.htmlentities(title, 'ENT_NOQUOTES')
                       , category  : (categories || [])
                     }
                   , map: map 

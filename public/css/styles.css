@@ -273,7 +273,7 @@ li.alert-error {
 
 .topic {
     margin: 10px 0 80px 0;
-    min-height: 500px;
+    min-height: 200px;
 }
 
 .topic-title {
@@ -293,6 +293,17 @@ li.alert-error {
 }
 
 .category-list > li {
+    display: inline-block;
+}
+
+
+.page-list {
+    margin: 0;
+    list-style: none;
+    display: inline;
+}
+
+.page-list > li {
     display: inline-block;
 }
 

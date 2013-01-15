@@ -5,27 +5,46 @@ module.exports = function(app, model) {
       , Room = model.mongoose.model('Room')
       , Message = model.mongoose.model('Message')
       , Step = app.libs.Step
-      , common = app.libs.common;
+      , common = app.libs.common
+      , maxLifeEmptyRoom = app.config.limits.maxLifeEmptyRoom
+      , roomsPerCategory = app.config.limits.roomsPerCategory
+      , roomsPerPage = app.config.limits.roomsPerPage;
     
     var actions = {};
     
     actions.index = function(req, res, error) {
         var catid = req.params.catid;
+        if(catid === "private") {
+            res.redirect("/");
+            return;
+        }
+        var page = parseInt(req.query.p, 10) || 1;
+        var totalCount = 0;
         Step(
-            function loadCategory() {
-                Category
-                .findOne({shortname: catid})
-                .populate("rooms", null, { messageCount: { $gte: 1 }}, { limit: 10 })
+            function countRooms() {
+                Room
+                .count({category: catid, messageCount: {$gt: 0}})
                 .exec(this);
             },
-            function fillLastMessages(err, cat) {
+            function loadRooms(err, count) {
                 if(err) throw err;
-                if(!cat) {
+                if(count == 0) {
                     res.redirect("/");
                     return;
                 }
+                totalCount = count;
+                Room
+                .where('category', catid)
+                .where('messageCount').gt(0)
+                .sort('lastMessageDate')
+                .limit(roomsPerPage)
+                .skip(roomsPerPage*(page-1))
+                .exec(this);
+            },
+            function fillLastMessages(err, rooms) {
+                if(err) throw err;
                 var group = this.group();
-                var rooms = (cat.rooms || []).slice();
+                rooms = rooms || [];
                 var callbacks = rooms.map(function() { return group(); });
                 rooms.forEach(function(room) {
                     Step(
@@ -57,15 +76,15 @@ module.exports = function(app, model) {
             },
             function formatTopics(err, rooms) {
                 if(err) throw err;
-                if(!rooms) {
-                    this(null, []);
-                    return;
-                }
+                rooms = rooms || [];
                 var topics = rooms.map(function(room) {
                     var messages = room.messages.map(function(message) {
                         var file = message.attachment;
                         if(file != null) {
-                            file.url = app.routes.url("file.download", {servername: file.servername, filename: file.originalname});
+                            file.url = app.routes.url("file.download", {
+                                servername: file.servername,
+                                filename  : encodeURIComponent(file.originalname)
+                            });
                         }
                         return {
                             body     : common.formatFile(file) + common.processMessage(message.body)
@@ -85,6 +104,11 @@ module.exports = function(app, model) {
             },
             function mapView(err, topics) {
                 if(err) throw err;
+                var data = {
+                    topic : topics
+                  , title : "/"+catid+"/"
+                  , catid : catid
+                };
                 var map = app.Plates.Map();
                 map.className('header-title').to('title');
                 map.where('href').has(/catid/).insert('catid');
@@ -97,9 +121,9 @@ module.exports = function(app, model) {
                 map.className('nickname').to('username');
                 map.className('msgdate').to('date');
                 map.className('message-num').to('num');
-                this(null, map, topics);
+                this(null, map, data);
             },
-            function loadCategories(err, map, topics) {
+            function loadCategories(err, map, data) {
                 if(err) throw err;
                 var nextstep = this;
                 map.where('href').has(/caturl/).insert('shortname');
@@ -107,18 +131,27 @@ module.exports = function(app, model) {
                 map.className('shortname').to('shortname');
                 Category.list(function(err, categories) {
                     if(err) nextstep(err);
-                    nextstep(null, map, topics, categories);
+                    data.category = categories;
+                    nextstep(null, map, data);
                 });
             },
-            function renderView(err, map, topics, categories) {
+            function loadPageLinks(err, map, data) {
+                if(err) throw err;
+                var nextstep = this;
+                data.page = [];
+                var totalPages = Math.ceil(totalCount/roomsPerPage);
+                for(var i=1; i<=totalPages; i++) {
+                    data.page.push({num: ""+i, pageurl: catid+"?p="+i});
+                }
+                map.className('page').to('page');
+                map.className('pagelink').to('num');
+                map.where('href').has(/pageurl/).insert('pageurl');
+                this(null, map, data);
+            },
+            function renderView(err, map, data) {
                 if(err) throw err;
                 res.render('category', {
-                    data : {
-                        topic : topics
-                      , title : "/"+catid+"/"
-                      , catid : catid
-                      , category: categories
-                    }
+                    data : data
                   , map: map 
                 });
             },
@@ -146,14 +179,41 @@ module.exports = function(app, model) {
             error(new Error("wrong input name"));
             return;
         }
-        var room = new Room({ispublic: ispublic, title: title});
+        var room = new Room({ispublic: ispublic, title: title, category: catid});
         Step(
             function saveRoom() {
                 room.save(this);
             },
-            function addToCategory(err) {
+            function removeOldRooms(err) {
                 if(err) throw err;
-                Category.addRoom(catid, room, this);
+                var next = this;
+                Room
+                .where('category', catid)
+                .where('messageCount').gt(0)
+                .sort('lastMessageDate')
+                .exec(function(err, rooms) {
+                    if(err || !rooms) error(err);
+                    if(rooms.length <= roomsPerCategory) {
+                        next();
+                    } else {
+                        var numOfRoomsToRemove = rooms.length - roomsPerCategory;
+                        rooms.slice(0, numOfRoomsToRemove).forEach(function(room) { room.remove(); });
+                        next();
+                    }
+                });
+            },
+            function removeOldEmptyRooms(err) {
+                if(err) throw err;
+                var next = this;
+                Room
+                .where('category', catid)
+                .where('messageCount', 0)
+                .where('creationDate').lt(new Date(Date.now() - maxLifeEmptyRoom))
+                .exec(function(err, rooms) {
+                    if(err || !rooms) error(err);
+                    rooms.forEach(function(room) { room.remove(); });
+                    next();
+                });
             },
             function redirect(err) {
                 if(err) throw err;

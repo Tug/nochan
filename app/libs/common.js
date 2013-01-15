@@ -9,7 +9,7 @@
         var msgStr = "";
         if(file) {
             if(file.status == 'Removed') return "";
-            msgStr += '<p><a id="c'+file.servername+'link" href="'+encodeURIComponent(file.url)+'" target="_blank">'
+            msgStr += '<p><a id="c'+file.servername+'link" href="'+file.url+'" target="_blank">'
                     +file.originalname
                     +'</a>'
                     +' - '+ this.readableSize(file.size)+' - '
