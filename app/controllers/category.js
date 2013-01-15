@@ -28,10 +28,6 @@ module.exports = function(app, model) {
             },
             function loadRooms(err, count) {
                 if(err) throw err;
-                if(count == 0) {
-                    res.redirect("/");
-                    return;
-                }
                 totalCount = count;
                 Room
                 .where('category', catid)
