@@ -132,4 +132,5 @@ exit 0
 EOF
 
 update-rc.d redis-server defaults
+chmod +x /etc/init.d/redis-server
 /etc/init.d/redis-server restart || exit $?
