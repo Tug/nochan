@@ -31,6 +31,7 @@ module.exports = function(app, model) {
             Category.list(function(err, categories) {
                 map.where('href').has(/caturl/).insert('shortname');
                 map.className('category').to('category');
+                map.className('shortname').use('name').as('title');
                 map.className('shortname').to('shortname');
                 res.render('chat.html', {
                     data: {

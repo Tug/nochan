@@ -124,6 +124,7 @@ module.exports = function(app, model) {
                 var nextstep = this;
                 map.where('href').has(/caturl/).insert('shortname');
                 map.className('category').to('category');
+                map.className('shortname').use('name').as('title');
                 map.className('shortname').to('shortname');
                 Category.list(function(err, categories) {
                     if(err) nextstep(err);
