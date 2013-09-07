@@ -6,7 +6,7 @@ module.exports = function(app, model) {
     
     actions.load = function(req, res, next) {
         req.cookies = null;
-        app.cookieParser(req, {}, function (parseErr) {
+        app.utils.cookieParser(req, {}, function (parseErr) {
             req.cookies  =  req.secureCookies || req.signedCookies || req.cookies;
             var sessionid = req.cookies[sessionKey];
             if(sessionid != null && sessionid != req.sessionID) {
