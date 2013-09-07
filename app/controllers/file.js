@@ -232,7 +232,7 @@ module.exports = function(app, model) {
                 var nextstep = this;
                 retryAsync(function() {
                     var retry = this;
-                    GrowingFile.open(app.libs.mongodb, db, servername, null, function(err, gf) {
+                    GrowingFile.open(app.libs.mongoose.mongo, model.mongoose.db, servername, null, function(err, gf) {
                         if(err || !gf) {
                             setTimeout(retry, 2000);
                             return;
