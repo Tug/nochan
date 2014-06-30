@@ -41,7 +41,7 @@ var config = {
         , libs        : path.join(application_root, 'app', 'libs')
         , controllers : path.join(application_root, 'app', 'controllers')
         , conf        : path.join(application_root, 'conf', 'index')
-        //, crons       : path.join(application_root, 'app', 'crons')
+        , crons       : path.join(application_root, 'app', 'crons')
         , favicon     : path.join(application_root, 'public', 'favicon.ico')
         , statics     : {
             '/static' : path.join(application_root, 'public')
