@@ -211,7 +211,7 @@ module.exports = function(app, model) {
                         nextstep(null, file);
                     });
                 }, 5, function() {
-                    error(err || new Error('File not found'));
+                    error(new Error('File not found'));
                 });
             },
             function loadIP(err, file) {
@@ -240,7 +240,7 @@ module.exports = function(app, model) {
                         nextstep(null, gf, ip);
                     });
                 }, 5, function() {
-                    error(err || new Error('GrowingFile not found'));
+                    error(new Error('GrowingFile not found'));
                 });
             },
             function sendFile(err, gf, ip) {
